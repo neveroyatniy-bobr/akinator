@@ -14,10 +14,8 @@ const char* TreeStrError(TreeError error) {
     }
 }
 
-void TreePrintError(Tree* tree, const char* file, int line) {
-    assert(tree != NULL);
-
-    fprintf(stderr, "Error in %s:%d:\n %s\n", file, line, TreeStrError(tree->last_error));
+void TreePrintError(TreeError error, const char* file, int line) {
+    fprintf(stderr, "Error in %s:%d:\n %s\n", file, line, TreeStrError(error));
 }
 
 TreeNode* TreeNodeInit(tree_elem_t value) { // FIXME return node else return null
@@ -70,6 +68,10 @@ TreeNode* TreeNodeGetLeft(TreeNode* node) {
 TreeError TreeNodeLinkLeft(TreeNode* node, TreeNode* new_left) {
     assert(node != NULL);
 
+    if (node->left != NULL) {
+        node->left->parent = NULL;
+    }
+
     node->left = new_left;
 
     if (new_left != NULL) {
@@ -87,6 +89,10 @@ TreeNode* TreeNodeGetRight(TreeNode* node) {
 
 TreeError TreeNodeLinkRight(TreeNode* node, TreeNode* new_right) {
     assert(node != NULL);
+
+    if (node->right != NULL) {
+        node->right->parent = NULL;
+    }
 
     node->right = new_right;
 
@@ -124,7 +130,7 @@ static void TreeNodesBuildDump(FILE* build_dump_file, TreeNode* node) {
 
     TreeNode* right = TreeNodeGetRight(node);
 
-    fprintf(build_dump_file, "    node_%p [label=\"value = %d\\nself = %p\\nparent = %p\\nleft = %p\\nright = %p\"];\n", node, value, node, parent, left, right);
+    fprintf(build_dump_file, "    node_%p [label=\"value = %s\\nself = %p\\nparent = %p\\nleft = %p\\nright = %p\"];\n", node, value, node, parent, left, right);
 
     if (node->left != NULL) {
         TreeNodesBuildDump(build_dump_file, node->left);
@@ -244,39 +250,3 @@ TreeError TreeDestroy(Tree* tree) {
 
     return TREE_OK;
 }
-
-TreeError TreeAdd(Tree* tree, tree_elem_t new_node_value) {
-    TreeNode* new_node = TreeNodeInit(new_node_value);
-
-    TreeNode* node = tree->root;
-    while (true) {
-        tree_elem_t value = TreeNodeGetValue(node);
-        TreeNode* left = TreeNodeGetLeft(node);
-        TreeNode* right = TreeNodeGetRight(node);
-
-        if (new_node_value <= value) {
-            if (left == NULL) {
-                break;
-            }
-            node = TreeNodeGetLeft(node);
-        }
-        else {
-            if (right == NULL) {
-                break;
-            }
-            node = TreeNodeGetRight(node);
-        }
-    }
-
-    if (new_node_value <= TreeNodeGetValue(node)) {
-        TreeNodeLinkLeft(node, new_node);
-    }
-    else {
-        TreeNodeLinkRight(node, new_node);
-    }
-
-    tree->size++;
-
-    return tree->last_error = TREE_OK;
-}
-

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-typedef int tree_elem_t;
+typedef char* tree_elem_t;
 
 enum TreeError {
     TREE_OK                   =  0,
@@ -13,11 +13,11 @@ enum TreeError {
 
 const char* TreeStrError(TreeError error);
 
-void TreePrintError(Tree* tree, const char* file, int line);
+void TreePrintError(TreeError error, const char* file, int line);
 
-#define TREE_PRINT_ERROR(tree) TreePrintError(tree, __FILE__, __LINE__)
+#define TREE_PRINT_ERROR(error) TreePrintError(error, __FILE__, __LINE__)
 
-static const tree_elem_t ROOT_VALUE = INT_MAX;
+static const tree_elem_t ROOT_VALUE = NULL;
 
 static const char DUMP_FILE_NAME[] = "dump_file.html";
 static const char BUILD_DUMP_FILE_NAME[] = "build_dump_file.dot";
@@ -31,6 +31,7 @@ struct TreeNode {
     TreeNode* left;
     TreeNode* right;
 };
+
 
 struct Tree {
     TreeNode* root;
@@ -67,7 +68,5 @@ TreeError TreeInit(Tree* tree);
 TreeError TreeSubTreeDestroy(TreeNode** node);
 
 TreeError TreeDestroy(Tree* tree);
-
-TreeError TreeAdd(Tree* tree, tree_elem_t new_node_value);
 
 #endif // TREE_HPP_
