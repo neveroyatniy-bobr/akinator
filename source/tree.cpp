@@ -67,7 +67,7 @@ TreeNode* TreeNodeGetLeft(TreeNode* node) {
     return node->left;
 }
 
-TreeError TreeNodeSetLeft(TreeNode* node, TreeNode* new_left) {
+TreeError TreeNodeLinkLeft(TreeNode* node, TreeNode* new_left) {
     assert(node != NULL);
 
     node->left = new_left;
@@ -85,7 +85,7 @@ TreeNode* TreeNodeGetRight(TreeNode* node) {
     return node->right;
 }
 
-TreeError TreeNodeSetRight(TreeNode* node, TreeNode* new_right) { // FIXME link right
+TreeError TreeNodeLinkRight(TreeNode* node, TreeNode* new_right) {
     assert(node != NULL);
 
     node->right = new_right;
@@ -269,10 +269,10 @@ TreeError TreeAdd(Tree* tree, tree_elem_t new_node_value) {
     }
 
     if (new_node_value <= TreeNodeGetValue(node)) {
-        TreeNodeSetLeft(node, new_node);
+        TreeNodeLinkLeft(node, new_node);
     }
     else {
-        TreeNodeSetRight(node, new_node);
+        TreeNodeLinkRight(node, new_node);
     }
 
     tree->size++;

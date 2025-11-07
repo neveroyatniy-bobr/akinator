@@ -48,11 +48,11 @@ TreeNode* TreeNodeGetParent(TreeNode* node);
 
 TreeNode* TreeNodeGetLeft(TreeNode* node);
 
-TreeError TreeNodeSetLeft(TreeNode* node, TreeNode* new_left);
+TreeError TreeNodeLinkLeft(TreeNode* node, TreeNode* new_left);
 
 TreeNode* TreeNodeGetRight(TreeNode* node);
 
-TreeError TreeNodeSetRight(TreeNode* node, TreeNode* new_right);
+TreeError TreeNodeLinkRight(TreeNode* node, TreeNode* new_right);
 
 tree_elem_t TreeNodeGetValue(TreeNode* node);
 
