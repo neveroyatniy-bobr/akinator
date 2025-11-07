@@ -9,6 +9,10 @@ const char* TreeStrError(TreeError error) {
             return "Выполнено без ошибок";
         case TREE_NODE_ALLOC_ERROR:
             return "Не получилось выделить память на ноду";
+        case TREE_GRAPH_ERROR:
+            return "Ошибка в графе дерева";
+        case TREE_LOST_NODES:
+            return "Утеряны вершины дерева";
         default:
             return "Непредвиденная ошибка";
     }
@@ -170,6 +174,40 @@ static void TreeEdgesBuildDump(FILE* build_dump_file, TreeNode* node) {
     if (node->right != NULL) {
         TreeEdgesBuildDump(build_dump_file, node->right);
     }
+}
+
+static bool IsTreeGraphOk(TreeNode* node, size_t* true_size) {
+    if (node == NULL) {
+        return true;
+    }
+
+    *true_size += (node->left != NULL);
+    *true_size += (node->right != NULL);
+    
+    bool is_node_left_ok = (node->left == NULL || node->left->parent == node);
+    bool is_node_right_ok = (node->right == NULL || node->right->parent == node);
+    
+    bool is_node_ok = is_node_left_ok && is_node_right_ok;
+
+    return is_node_ok && IsTreeGraphOk(node->left, true_size) && IsTreeGraphOk(node->right, true_size);
+}
+
+TreeError TreeVerefy(Tree* tree) {
+    size_t true_size = 0;
+
+    if (tree->last_error != TREE_OK) {
+        return tree->last_error;
+    }
+    
+    if (!IsTreeGraphOk(tree->root, &true_size)) {
+        return tree->last_error = TREE_GRAPH_ERROR;
+    }
+
+    if (true_size != tree->size) {
+        return tree->last_error = TREE_LOST_NODES;
+    }
+
+    return tree->last_error = TREE_OK;
 }
 
 void TreeDump(Tree* tree, const char* file, int line) {

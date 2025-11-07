@@ -8,7 +8,9 @@ typedef char* tree_elem_t;
 
 enum TreeError {
     TREE_OK                   =  0,
-    TREE_NODE_ALLOC_ERROR     =  1
+    TREE_NODE_ALLOC_ERROR     =  1,
+    TREE_GRAPH_ERROR          =  2,
+    TREE_LOST_NODES           =  3
 };
 
 const char* TreeStrError(TreeError error);
@@ -58,6 +60,14 @@ TreeError TreeNodeLinkRight(TreeNode* node, TreeNode* new_right);
 tree_elem_t TreeNodeGetValue(TreeNode* node);
 
 TreeError TreeNodeSetValue(TreeNode* node, tree_elem_t new_value);
+
+TreeError TreeVerefy(Tree* tree);
+
+#define TREE_CHECK(tree)                \
+    TreeError err_ = TreeVerefy(tree);  \
+    if (err_ != TREE_OK) {              \
+        return err_;                    \
+    }
 
 void TreeDump(Tree* tree, const char* file, int line);
 
