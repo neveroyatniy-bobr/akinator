@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-typedef char* tree_elem_t;
+typedef const char* tree_elem_t;
 
 enum TreeError {
     TREE_OK                   =  0,
@@ -78,5 +78,9 @@ TreeError TreeInit(Tree* tree);
 TreeError TreeSubTreeDestroy(TreeNode** node);
 
 TreeError TreeDestroy(Tree* tree);
+
+TreeNode* TreeGetRoot(Tree* tree);
+
+size_t TreeGetSize(Tree* tree);
 
 #endif // TREE_HPP_

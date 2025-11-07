@@ -288,3 +288,15 @@ TreeError TreeDestroy(Tree* tree) {
 
     return TREE_OK;
 }
+
+TreeNode* TreeGetRoot(Tree* tree) {
+    assert(tree);
+
+    return tree->root;
+}
+
+size_t TreeGetSize(Tree* tree) {
+    assert(tree);
+
+    return tree->size;
+}
