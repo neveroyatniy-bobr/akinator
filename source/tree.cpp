@@ -203,9 +203,9 @@ static bool IsTreeGraphOk(TreeNode* node, size_t* true_size) {
     
     bool is_node_ok = is_node_left_ok && is_node_right_ok;
 
-    return is_node_ok                           && 
-           IsTreeGraphOk(node->left, true_size) && 
-           IsTreeGraphOk(node->right, true_size);
+    return is_node_ok
+           && IsTreeGraphOk(node->left, true_size)
+           && IsTreeGraphOk(node->right, true_size);
 }
 
 TreeError TreeVerefy(Tree* tree) {
