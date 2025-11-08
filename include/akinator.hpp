@@ -41,4 +41,6 @@ AkinatorError AkinatorTreeLoad(Tree* akinator_tree);
 
 AkinatorError AkinatorGetDefine(Tree* akinator_tree, const char* name);
 
+AkinatorError AkinatorCompare(Tree* akinator_tree, const char* name1, const char* name2);
+
 #endif // AKINATOR_HPP_

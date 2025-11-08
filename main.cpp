@@ -15,6 +15,7 @@ int main() {
     }
 
     AkinatorGetDefine(&akinator_tree, "илья д.");
+    AkinatorCompare(&akinator_tree, "илья д.", "машануладно");
 
     AkinatorError request_error = AkinatorRequest(&akinator_tree);
     if (request_error != AKINATOR_OK) {

@@ -309,8 +309,8 @@ static AkinatorError AkinatorGetAnswerList(TreeNode* node, const char* name, cha
 
 AkinatorError AkinatorGetDefine(Tree* akinator_tree, const char* name) {
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
+
     char ans_list[MAX_ANSWER_LIST_LEN] = {};
-    
     AkinatorGetAnswerList(first_node, name, "", ans_list);
 
     size_t ans_list_len = strlen(ans_list);
@@ -329,9 +329,140 @@ AkinatorError AkinatorGetDefine(Tree* akinator_tree, const char* name) {
         }
 
         printf("%s ", TreeNodeGetValue(node));
+
+        if (ans_list[ans_i] == 'n') {
+            node = TreeNodeGetLeft(node);
+        }
+        else {
+            node = TreeNodeGetRight(node);
+        }
     }
 
     printf("\n");
+
+    return AKINATOR_OK;
+}
+
+AkinatorError AkinatorCompare(Tree* akinator_tree, const char* name1, const char* name2) {
+    TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
+    
+    char ans_list1[MAX_ANSWER_LIST_LEN] = {};
+    AkinatorGetAnswerList(first_node, name1, "", ans_list1);
+    size_t ans_list1_len = strlen(ans_list1);
+
+    char ans_list2[MAX_ANSWER_LIST_LEN] = {};
+    AkinatorGetAnswerList(first_node, name2, "", ans_list2);
+    size_t ans_list2_len = strlen(ans_list2);
+
+    size_t common_ans_cnt = 0;
+    while (ans_list1[common_ans_cnt] == ans_list2[common_ans_cnt]) {
+        common_ans_cnt++;
+    }
+
+    char common_ans_list[MAX_ANSWER_LIST_LEN] = {};
+    strncpy(common_ans_list, ans_list1, common_ans_cnt);
+
+    char different_ans1[MAX_ANSWER_LIST_LEN] = {};
+    strncpy(different_ans1, ans_list1 + common_ans_cnt, MAX_ANSWER_LIST_LEN);
+    size_t dif_ans1_len = ans_list1_len - common_ans_cnt;
+
+    char different_ans2[MAX_ANSWER_LIST_LEN];
+    strncpy(different_ans2, ans_list2 + common_ans_cnt, MAX_ANSWER_LIST_LEN);
+    size_t dif_ans2_len = ans_list2_len - common_ans_cnt;
+
+    TreeNode* last_common_node = NULL;
+
+    if (common_ans_cnt == 0) {
+        printf("Они ничем не похожи\n");
+    }
+    else {
+        printf("Каждый из них ");
+
+        TreeNode* node = first_node;
+        for (size_t common_ans_i = 0; common_ans_i < common_ans_cnt; common_ans_i++) {
+            if (common_ans_list[common_ans_i] == 'n') {
+                printf("не ");
+            }
+
+            printf("%s ", TreeNodeGetValue(node));
+
+            if (common_ans_list[common_ans_i] == 'n') {
+                node = TreeNodeGetLeft(node);
+            }
+            else {
+                node = TreeNodeGetRight(node);
+            }
+        }
+        
+        last_common_node = TreeNodeGetParent(node);
+
+        printf("\n");
+    }
+
+    if (ans_list1_len - common_ans_cnt == 0) {
+        printf("Они ничем не отличаются");
+    }
+    else {
+        printf("Первый уникален тем что он: ");
+
+        TreeNode* node1 = NULL;
+        if (common_ans_list[common_ans_cnt - 1] == 'n') {
+            node1 = TreeNodeGetLeft(last_common_node);
+        }
+        else {
+            node1 = TreeNodeGetRight(last_common_node);
+        }
+
+        printf("%s", TreeNodeGetValue(node1));
+
+        for (size_t ans1_i = 0; ans1_i < dif_ans1_len + 1; ans1_i++) {
+            if (different_ans1[ans1_i] == 'n') {
+                printf("не ");
+            }
+
+            printf("%s ", TreeNodeGetValue(node1));
+
+            if (ans1_i == dif_ans1_len) {
+                break;
+            }
+
+            if (different_ans1[ans1_i] == 'n') {
+                node1 = TreeNodeGetLeft(node1);
+            }
+            else {
+                node1 = TreeNodeGetRight(node1);
+            }
+        }
+
+        printf("Второй уникален тем что он: ");
+
+        TreeNode* node2 = NULL;
+        if (common_ans_list[common_ans_cnt - 1] == 'n') {
+            node2 = TreeNodeGetLeft(last_common_node);
+        }
+        else {
+            node2 = TreeNodeGetRight(last_common_node);
+        }
+
+        for (size_t ans2_i = 0; ans2_i < dif_ans2_len + 1; ans2_i++) {
+            if (different_ans2[ans2_i] == 'n') {
+                printf("не ");
+            }
+
+            printf("%s ", TreeNodeGetValue(node1));
+
+            if (ans2_i == dif_ans2_len) {
+                break;
+            }
+
+            if (different_ans2[ans2_i] == 'n') {
+                node1 = TreeNodeGetLeft(node1);
+            }
+            else {
+                node1 = TreeNodeGetRight(node1);
+            }
+        }
+    }
 
     return AKINATOR_OK;
 }
