@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include <errno.h>
 
 #include "protected_free.hpp"
 
@@ -222,7 +223,7 @@ void TreeDump(Tree* tree, const char* file, int line) {
     FILE* build_dump_file = fopen(BUILD_DUMP_FILE_NAME, "w");
 
     if (build_dump_file == NULL) {
-        fprintf(stderr, "Ошибка в создании файла дампа\n");
+        fprintf(stderr, "Ошибка в создании файла дампа: %s\n", strerror(errno));
         return;
     }
 
@@ -248,7 +249,7 @@ void TreeDump(Tree* tree, const char* file, int line) {
     FILE* dump_file = fopen(DUMP_FILE_NAME, "a");
 
     if (dump_file == NULL) {
-        fprintf(stderr, "Ошибка в создании файла дампа\n");
+        fprintf(stderr, "Ошибка в создании файла дампа: %s\n", strerror(errno));
         return;
     }
 
