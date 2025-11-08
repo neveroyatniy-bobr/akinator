@@ -60,7 +60,7 @@ TreeError TreeNodeLinkRight(TreeNode* node, TreeNode* new_right);
 
 tree_elem_t TreeNodeGetValue(TreeNode* node);
 
-TreeError TreeNodeSetValue(TreeNode* node, tree_elem_t new_value);
+TreeError TreeNodeSetValue(TreeNode* node, const char* new_value);
 
 TreeError TreeVerefy(Tree* tree);
 

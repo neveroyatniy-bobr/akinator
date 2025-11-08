@@ -122,7 +122,7 @@ tree_elem_t TreeNodeGetValue(TreeNode* node) {
 }
 
 
-TreeError TreeNodeSetValue(TreeNode* node, tree_elem_t new_value) {
+TreeError TreeNodeSetValue(TreeNode* node, const char* new_value) {
     assert(node != NULL);
 
     node->value = new_value;
