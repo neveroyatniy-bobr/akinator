@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 const char* TreeStrError(TreeError error) {
     switch (error) {
@@ -33,7 +34,8 @@ TreeNode* TreeNodeInit(tree_elem_t value) { // FIXME return node else return nul
     node->left = NULL;
     node->right = NULL;
 
-    node->value = value;
+    node->value = (tree_elem_t)calloc(1, MAX_TREE_CHAR_SIZE);
+    strcpy(node->value, value);
 
     return node;
 }
@@ -47,7 +49,8 @@ TreeError TreeNodeDestroy(TreeNode** node) {
     loc_node->left = NULL;
     loc_node->right = NULL;
 
-    loc_node->value = 0;
+    free(loc_node->value);
+    loc_node->value = NULL;
 
     free(loc_node);
     loc_node = NULL;
