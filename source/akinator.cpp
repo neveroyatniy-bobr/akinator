@@ -70,34 +70,31 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
         char attribute[MAX_ATTRIBUTE_LEN] = "";
         scanf("\n%[^\n]", attribute);
 
-        char question_value[MAX_QUESTION_LEN] = "";
-        snprintf(question_value, MAX_QUESTION_LEN,"Он(а) %s?", attribute);
-
         TreeNode* current_answer = node;
         TreeNode* parent = TreeNodeGetParent(current_answer);
         TreeNode* new_answer = TreeNodeInit(name);
-        TreeNode* question = TreeNodeInit(question_value);
+        TreeNode* attribute_node = TreeNodeInit(attribute);
 
-        if (new_answer == NULL || question == NULL) {
+        if (new_answer == NULL || attribute_node == NULL) {
             return AKINATOR_NODE_ALLOC_ERROR;
         }
 
         if (TreeNodeGetLeft(parent) == current_answer) {
-            if (TreeNodeLinkLeft(parent, question) != TREE_OK) {
+            if (TreeNodeLinkLeft(parent, attribute_node) != TREE_OK) {
                 return AKINATOR_TREE_ERROR;
             }
         }
         else {
-            if (TreeNodeLinkRight(parent, question) != TREE_OK) {
+            if (TreeNodeLinkRight(parent, attribute_node) != TREE_OK) {
                 return AKINATOR_TREE_ERROR;
             }
         }
 
-        if (TreeNodeLinkLeft(question, current_answer) != TREE_OK) {
+        if (TreeNodeLinkLeft(attribute_node, current_answer) != TREE_OK) {
             return AKINATOR_TREE_ERROR;
         }
 
-        if (TreeNodeLinkRight(question, new_answer) != TREE_OK) {
+        if (TreeNodeLinkRight(attribute_node, new_answer) != TREE_OK) {
             return AKINATOR_TREE_ERROR;
         }
 
@@ -145,7 +142,7 @@ static AkinatorError AkinatorQuestionHandle(TreeNode** node, TreeNode** node_par
     TreeNode* loc_node = *node;
     TreeNode* loc_node_parent = *node_parent;
 
-    printf("%s\n", TreeNodeGetValue(loc_node));
+    printf("Он(a) %s?\n", TreeNodeGetValue(loc_node));
 
     char yes_or_no[MAX_ANSWER_LEN] = "";
     scanf("%s", yes_or_no);
@@ -204,7 +201,6 @@ AkinatorError AkinatorRequest(Tree* akinator_tree) {
 }
 
 static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file) {
-    assert(node != NULL);
     assert(database_file != NULL);
 
     if (node == NULL) {
@@ -287,6 +283,55 @@ AkinatorError AkinatorTreeLoad(Tree* akinator_tree) {
     }
 
     fclose(database_file);
+
+    return AKINATOR_OK;
+}
+
+static AkinatorError AkinatorGetAnswerList(TreeNode* node, const char* name, char* cur_ans_list, char* ans_list) {
+    bool is_answer = TreeNodeGetLeft(node) == NULL && TreeNodeGetRight(node) == NULL;
+    if (is_answer) {
+        if (strcmp(name, TreeNodeGetValue(node)) == 0) {
+            strncpy(ans_list, cur_ans_list, MAX_ANSWER_LIST_LEN);
+        }
+        return AKINATOR_OK;
+    }
+
+    char left_answer_list[MAX_ANSWER_LIST_LEN] = {};
+    snprintf(left_answer_list, MAX_ANSWER_LIST_LEN, "%sn", cur_ans_list);
+    AkinatorGetAnswerList(TreeNodeGetLeft(node), name, left_answer_list, ans_list);
+
+    char right_answer_list[MAX_ANSWER_LIST_LEN] = {};
+    snprintf(right_answer_list, MAX_ANSWER_LIST_LEN, "%sy", cur_ans_list);
+    AkinatorGetAnswerList(TreeNodeGetRight(node), name, right_answer_list, ans_list);
+
+    return AKINATOR_OK;
+}
+
+AkinatorError AkinatorGetDefine(Tree* akinator_tree, const char* name) {
+    TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
+    char ans_list[MAX_ANSWER_LIST_LEN] = {};
+    
+    AkinatorGetAnswerList(first_node, name, "", ans_list);
+
+    size_t ans_list_len = strlen(ans_list);
+
+    if (ans_list_len == 0) {
+        printf("Я его не знаю\n");
+        return AKINATOR_OK;
+    }
+
+    printf("Он(а) ");
+
+    TreeNode* node = first_node;
+    for (size_t ans_i = 0; ans_i < ans_list_len; ans_i++) {
+        if (ans_list[ans_i] == 'n') {
+            printf("не ");
+        }
+
+        printf("%s ", TreeNodeGetValue(node));
+    }
+
+    printf("\n");
 
     return AKINATOR_OK;
 }

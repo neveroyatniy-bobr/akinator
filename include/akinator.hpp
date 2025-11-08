@@ -8,6 +8,7 @@
 static const size_t MAX_NAME_LEN = 128;
 static const size_t MAX_ATTRIBUTE_LEN = 128;
 static const size_t MAX_QUESTION_LEN = 256;
+static const size_t MAX_ANSWER_LIST_LEN = 256;
 static const size_t MAX_ANSWER_LEN = 8;
 
 static const char* AKINATOR_DATABASE_FILE_NAME = "database.aki";
@@ -37,5 +38,7 @@ AkinatorError AkinatorRequest(Tree* akinator_tree);
 AkinatorError AkinatorTreeSave(Tree* akinator_tree);
 
 AkinatorError AkinatorTreeLoad(Tree* akinator_tree);
+
+AkinatorError AkinatorGetDefine(Tree* akinator_tree, const char* name);
 
 #endif // AKINATOR_HPP_
