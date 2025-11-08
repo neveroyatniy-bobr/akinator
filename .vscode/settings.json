@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "asm": "code-text-binary",
+        "fact": "code-text-binary",
+        "cstdlib": "cpp"
+    }
+}

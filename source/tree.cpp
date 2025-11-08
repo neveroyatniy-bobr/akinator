@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "protected_free.hpp"
+
 const char* TreeStrError(TreeError error) {
     switch (error) {
         case TREE_OK:
@@ -54,11 +56,9 @@ TreeError TreeNodeDestroy(TreeNode** node) {
     loc_node->left = NULL;
     loc_node->right = NULL;
 
-    free(loc_node->value);
-    loc_node->value = NULL;
+    PROTECTED_FREE(loc_node->value);
 
-    free(loc_node);
-    loc_node = NULL;
+    PROTECTED_FREE(loc_node);
 
     *node = loc_node;
 
