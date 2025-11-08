@@ -30,14 +30,10 @@ AkinatorError AkinatorTreeInit(Tree* akinator_tree) {
 
     AkinatorTreeLoad(akinator_tree);
 
-    TREE_DUMP(akinator_tree);
-
     return AKINATOR_OK;
 }
 
 AkinatorError AkinatorTreeDestroy(Tree* akinator_tree) {
-    TREE_DUMP(akinator_tree);
-
     AkinatorTreeSave(akinator_tree);    
 
     if (TreeDestroy(akinator_tree) != TREE_OK) {
