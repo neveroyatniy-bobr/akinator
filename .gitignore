@@ -1,5 +1,4 @@
 *.exe
 *.dot
 *.html
-*.aki
 build/

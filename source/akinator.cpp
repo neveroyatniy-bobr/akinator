@@ -413,18 +413,12 @@ AkinatorError AkinatorCompare(Tree* akinator_tree, const char* name1, const char
             node1 = TreeNodeGetRight(last_common_node);
         }
 
-        printf("%s", TreeNodeGetValue(node1));
-
-        for (size_t ans1_i = 0; ans1_i < dif_ans1_len + 1; ans1_i++) {
+        for (size_t ans1_i = 0; ans1_i < dif_ans1_len; ans1_i++) {
             if (different_ans1[ans1_i] == 'n') {
                 printf("не ");
             }
 
             printf("%s ", TreeNodeGetValue(node1));
-
-            if (ans1_i == dif_ans1_len) {
-                break;
-            }
 
             if (different_ans1[ans1_i] == 'n') {
                 node1 = TreeNodeGetLeft(node1);
@@ -433,6 +427,8 @@ AkinatorError AkinatorCompare(Tree* akinator_tree, const char* name1, const char
                 node1 = TreeNodeGetRight(node1);
             }
         }
+
+        printf("\n");
 
         printf("Второй уникален тем что он: ");
 
@@ -444,24 +440,22 @@ AkinatorError AkinatorCompare(Tree* akinator_tree, const char* name1, const char
             node2 = TreeNodeGetRight(last_common_node);
         }
 
-        for (size_t ans2_i = 0; ans2_i < dif_ans2_len + 1; ans2_i++) {
+        for (size_t ans2_i = 0; ans2_i < dif_ans2_len; ans2_i++) {
             if (different_ans2[ans2_i] == 'n') {
                 printf("не ");
             }
 
-            printf("%s ", TreeNodeGetValue(node1));
-
-            if (ans2_i == dif_ans2_len) {
-                break;
-            }
+            printf("%s ", TreeNodeGetValue(node2));
 
             if (different_ans2[ans2_i] == 'n') {
-                node1 = TreeNodeGetLeft(node1);
+                node2 = TreeNodeGetLeft(node2);
             }
             else {
-                node1 = TreeNodeGetRight(node1);
+                node2 = TreeNodeGetRight(node2);
             }
         }
+
+        printf("\n");
     }
 
     return AKINATOR_OK;
