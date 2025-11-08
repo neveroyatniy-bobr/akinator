@@ -44,7 +44,7 @@ struct Tree {
     TreeError last_error;
 };
 
-TreeNode* TreeNodeInit(tree_elem_t value);
+TreeNode* TreeNodeInit(const char* value);
 
 TreeError TreeNodeDestroy(TreeNode** node);
 

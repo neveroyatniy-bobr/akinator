@@ -23,7 +23,7 @@ void TreePrintError(TreeError error, const char* file, int line) {
     fprintf(stderr, "Error in %s:%d:\n %s\n", file, line, TreeStrError(error));
 }
 
-TreeNode* TreeNodeInit(tree_elem_t value) { // FIXME return node else return null
+TreeNode* TreeNodeInit(const char* value) { // FIXME return node else return null
     TreeNode* node = (TreeNode*)calloc(1, sizeof(TreeNode));
 
     if (node == NULL) {
@@ -34,8 +34,13 @@ TreeNode* TreeNodeInit(tree_elem_t value) { // FIXME return node else return nul
     node->left = NULL;
     node->right = NULL;
 
-    node->value = (tree_elem_t)calloc(1, MAX_TREE_CHAR_SIZE);
-    strcpy(node->value, value);
+    if (value != ROOT_VALUE) {
+        node->value = (tree_elem_t)calloc(1, MAX_TREE_CHAR_SIZE);
+        strcpy(node->value, value);
+    }
+    else {
+        node->value = ROOT_VALUE;
+    }
 
     return node;
 }
