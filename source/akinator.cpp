@@ -1,6 +1,7 @@
 #include "akinator.hpp"
 
 #include <stdio.h>
+#include <assert.h>
 
 const char* AkinatorStrError(AkinatorError error) {
     switch (error) {
@@ -20,10 +21,15 @@ const char* AkinatorStrError(AkinatorError error) {
 }
 
 void AkinatorPrintError(AkinatorError error, const char* file, int line) {
+    assert(file != NULL);
+    assert(line > 0);
+
     fprintf(stderr, "Error in %s:%d:\n%s\n", file, line, AkinatorStrError(error));
 }
 
 AkinatorError AkinatorTreeInit(Tree* akinator_tree) {
+    assert(akinator_tree != NULL);
+
     if (TreeInit(akinator_tree) != TREE_OK) {
         return AKINATOR_TREE_ERROR;
     }
@@ -34,6 +40,8 @@ AkinatorError AkinatorTreeInit(Tree* akinator_tree) {
 }
 
 AkinatorError AkinatorTreeDestroy(Tree* akinator_tree) {
+    assert(akinator_tree != NULL);
+
     AkinatorTreeSave(akinator_tree);    
 
     if (TreeDestroy(akinator_tree) != TREE_OK) {
@@ -43,6 +51,8 @@ AkinatorError AkinatorTreeDestroy(Tree* akinator_tree) {
 }
 
 static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
+    assert(node != NULL);
+
     printf("Вы загадали %s?\n", TreeNodeGetValue(node));
 
     char yes_or_no[MAX_ANSWER_LEN];
@@ -98,6 +108,8 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
 }
 
 static AkinatorError AkinatorDontKnowHandle(TreeNode* node_parent) {
+    assert(node_parent != NULL);
+
     printf("Я не знаю такого!\n");
 
     printf("А кого вы загадали?\n");
@@ -127,6 +139,9 @@ static AkinatorError AkinatorDontKnowHandle(TreeNode* node_parent) {
 }
 
 static AkinatorError AkinatorQuestionHandle(TreeNode** node, TreeNode** node_parent) {
+    assert(node != NULL);
+    assert(node_parent != NULL);
+
     TreeNode* loc_node = *node;
     TreeNode* loc_node_parent = *node_parent;
 
@@ -151,6 +166,8 @@ static AkinatorError AkinatorQuestionHandle(TreeNode** node, TreeNode** node_par
 }
 
 AkinatorError AkinatorRequest(Tree* akinator_tree) {
+    assert(akinator_tree != NULL);
+
     TreeNode* node_parent = TreeGetRoot(akinator_tree);
     TreeNode* node = TreeNodeGetLeft(node_parent);
 
@@ -187,6 +204,9 @@ AkinatorError AkinatorRequest(Tree* akinator_tree) {
 }
 
 static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file) {
+    assert(node != NULL);
+    assert(database_file != NULL);
+
     if (node == NULL) {
         fprintf(database_file, "{nil}");
         return AKINATOR_OK;
@@ -206,6 +226,8 @@ static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file) 
 }
 
 AkinatorError AkinatorTreeSave(Tree* akinator_tree) {
+    assert(akinator_tree != NULL);
+
     FILE* database_file = fopen(AKINATOR_DATABASE_FILE_NAME, "w");
     if (database_file == NULL) {
         return AKINATOR_DATABASE_FILE_CREATE_ERROR;
@@ -223,6 +245,10 @@ AkinatorError AkinatorTreeSave(Tree* akinator_tree) {
 }
 
 static AkinatorError AkinatorTreeBuild(TreeNode** node, TreeNode* node_parent, FILE* database_file) {
+    assert(node != NULL);
+    assert(node_parent != NULL);
+    assert(database_file != NULL);
+
     TreeNode* loc_node = *node;
 
     char value[MAX_TREE_CHAR_SIZE];
@@ -248,6 +274,8 @@ static AkinatorError AkinatorTreeBuild(TreeNode** node, TreeNode* node_parent, F
 }
 
 AkinatorError AkinatorTreeLoad(Tree* akinator_tree) {
+    assert(akinator_tree != NULL);
+
     FILE* database_file = fopen(AKINATOR_DATABASE_FILE_NAME, "r");
     if (database_file == NULL) {
         return AKINATOR_DATABASE_FILE_OPEN_ERROR;

@@ -23,10 +23,13 @@ const char* TreeStrError(TreeError error) {
 }
 
 void TreePrintError(TreeError error, const char* file, int line) {
+    assert(file != NULL);
+    assert(line > 0);
+
     fprintf(stderr, "Error in %s:%d:\n %s\n", file, line, TreeStrError(error));
 }
 
-TreeNode* TreeNodeInit(const char* value) { // FIXME return node else return null
+TreeNode* TreeNodeInit(const char* value) {
     TreeNode* node = (TreeNode*)calloc(1, sizeof(TreeNode));
 
     if (node == NULL) {
@@ -186,6 +189,8 @@ static void TreeEdgesBuildDump(FILE* build_dump_file, TreeNode* node) {
 }
 
 static bool IsTreeGraphOk(TreeNode* node, size_t* true_size) {
+    assert(true_size != NULL);
+
     if (node == NULL) {
         return true;
     }
@@ -202,6 +207,8 @@ static bool IsTreeGraphOk(TreeNode* node, size_t* true_size) {
 }
 
 TreeError TreeVerefy(Tree* tree) {
+    assert(tree != NULL);
+
     size_t true_size = 0;
 
     if (tree->last_error != TREE_OK) {
@@ -220,6 +227,10 @@ TreeError TreeVerefy(Tree* tree) {
 }
 
 void TreeDump(Tree* tree, const char* file, int line) {
+    assert(tree != NULL);
+    assert(file != NULL);
+    assert(line > 0);
+
     FILE* build_dump_file = fopen(BUILD_DUMP_FILE_NAME, "w");
 
     if (build_dump_file == NULL) {
@@ -261,6 +272,8 @@ void TreeDump(Tree* tree, const char* file, int line) {
 }
 
 TreeError TreeInit(Tree* tree) {
+    assert(tree != NULL);
+
     tree->root = TreeNodeInit(ROOT_VALUE);
 
     tree->size = 0;
@@ -271,6 +284,8 @@ TreeError TreeInit(Tree* tree) {
 }
 
 TreeError TreeSubTreeDestroy(TreeNode** node) {
+    assert(node != NULL);
+
     TreeNode* loc_node = *node;
 
     if (loc_node->left != NULL) {
@@ -289,6 +304,8 @@ TreeError TreeSubTreeDestroy(TreeNode** node) {
 }
 
 TreeError TreeDestroy(Tree* tree) {
+    assert(tree != NULL);
+
     TreeSubTreeDestroy(&tree->root);
 
     tree->size = 0;
