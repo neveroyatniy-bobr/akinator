@@ -61,7 +61,7 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
         scanf("\n%[^\n]", attribute);
 
         char question_value[MAX_QUESTION_LEN] = "";
-        sprintf(question_value, "Он(а) %s?", attribute);
+        snprintf(question_value, MAX_QUESTION_LEN,"Он(а) %s?", attribute);
 
         TreeNode* current_answer = node;
         TreeNode* parent = TreeNodeGetParent(current_answer);

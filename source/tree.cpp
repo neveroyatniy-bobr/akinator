@@ -242,7 +242,7 @@ void TreeDump(Tree* tree, const char* file, int line) {
 
     char command[BUILD_DUMP_COMMAND_SIZE];
 
-    sprintf(command, "dot -Tsvg %s -o %s", BUILD_DUMP_FILE_NAME, DUMP_FILE_NAME);
+    snprintf(command, BUILD_DUMP_COMMAND_SIZE, "dot -Tsvg %s -o %s", BUILD_DUMP_FILE_NAME, DUMP_FILE_NAME);
 
     system(command);
 
