@@ -39,8 +39,8 @@ AkinatorError AkinatorTreeSave(Tree* akinator_tree);
 
 AkinatorError AkinatorTreeLoad(Tree* akinator_tree);
 
-AkinatorError AkinatorGetDefine(Tree* akinator_tree, const char* name);
+AkinatorError AkinatorFind(Tree* akinator_tree);
 
-AkinatorError AkinatorCompare(Tree* akinator_tree, const char* name1, const char* name2);
+AkinatorError AkinatorCompare(Tree* akinator_tree);
 
 #endif // AKINATOR_HPP_
