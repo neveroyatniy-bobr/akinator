@@ -5,11 +5,14 @@
 
 #include "tree.hpp"
 
-static const size_t MAX_NAME_LEN = 128;
-static const size_t MAX_ATTRIBUTE_LEN = 128;
-static const size_t MAX_QUESTION_LEN = 256;
-static const size_t MAX_ANSWER_LIST_LEN = 256;
-static const size_t MAX_ANSWER_LEN = 8;
+#define MAX_NAME_LEN 128
+#define MAX_ATTRIBUTE_LEN 128
+#define MAX_QUESTION_LEN 256
+#define MAX_ANSWER_LIST_LEN 256
+#define MAX_ANSWER_LEN 8
+
+#define TO_STRING_(x) #x
+#define TO_STRING(x) TO_STRING_(x)
 
 static const char* AKINATOR_DATABASE_FILE_NAME = "database.aki";
 

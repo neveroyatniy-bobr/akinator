@@ -5,7 +5,7 @@
 #include <limits.h>
 
 typedef char* tree_elem_t;
-static const size_t MAX_TREE_CHAR_SIZE = 256;
+#define MAX_TREE_CHAR_SIZE 256
 
 enum TreeError {
     TREE_OK                   =  0,

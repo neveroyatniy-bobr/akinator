@@ -4,6 +4,10 @@
 #include "akinator.hpp"
 #include "tree.hpp"
 
+static void CleanBuffer() {
+    while (getchar() != '\n') { }
+}
+
 AkinatorError AkinatorApp() {
     Tree akinator_tree = {};
 
@@ -26,6 +30,7 @@ AkinatorError AkinatorApp() {
 
         int mode_num = 0;
         scanf("%d", &mode_num);
+        CleanBuffer();
 
         AkinatorAppMode mode = (AkinatorAppMode)(mode_num - 1);
 

@@ -55,20 +55,20 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
 
     printf("Вы загадали %s?\n", TreeNodeGetValue(node));
 
-    char yes_or_no[MAX_ANSWER_LEN];
-    scanf("%s", yes_or_no);
+    char yes_or_no[1 + MAX_ANSWER_LEN];
+    scanf("%"TO_STRING(MAX_ANSWER_LEN)"s", yes_or_no);
 
     if (strcmp(yes_or_no, "да") == 0) {
         printf("Я крут!\n");
     }
     else {
         printf("А кого вы загадали?\n");
-        char name[MAX_NAME_LEN] = "";
-        scanf("\n%[^\n]", name);
+        char name[1 + MAX_NAME_LEN] = "";
+        scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
 
         printf("Чем он(а) отличается от моего варианта? Он(а)(ваш вариант) ....\n");
-        char attribute[MAX_ATTRIBUTE_LEN] = "";
-        scanf("\n%[^\n]", attribute);
+        char attribute[1 + MAX_ATTRIBUTE_LEN] = "";
+        scanf("\n%"TO_STRING(MAX_ATTRIBUTE_LEN)"[^\n]", attribute);
 
         TreeNode* current_answer = node;
         TreeNode* parent = TreeNodeGetParent(current_answer);
@@ -110,8 +110,8 @@ static AkinatorError AkinatorDontKnowHandle(TreeNode* node_parent) {
     printf("Я не знаю такого!\n");
 
     printf("А кого вы загадали?\n");
-    char name[MAX_NAME_LEN] = "";
-    scanf("%s", name);
+    char name[1 + MAX_NAME_LEN] = "";
+    scanf("%"TO_STRING(MAX_ANSWER_LEN)"s", name);
 
     TreeNode* new_answer = TreeNodeInit(name);
     if (new_answer == NULL) {
@@ -144,8 +144,8 @@ static AkinatorError AkinatorQuestionHandle(TreeNode** node, TreeNode** node_par
 
     printf("Он(a) %s?\n", TreeNodeGetValue(loc_node));
 
-    char yes_or_no[MAX_ANSWER_LEN] = "";
-    scanf("%s", yes_or_no);
+    char yes_or_no[1 + MAX_ANSWER_LEN] = "";
+    scanf("%"TO_STRING(MAX_ANSWER_LEN)"s", yes_or_no);
     
     if (strcmp(yes_or_no, "да") != 0) {
         loc_node_parent = loc_node;
@@ -247,8 +247,8 @@ static AkinatorError AkinatorTreeBuild(TreeNode** node, TreeNode* node_parent, F
 
     TreeNode* loc_node = *node;
 
-    char value[MAX_TREE_CHAR_SIZE];
-    fscanf(database_file, "{%[^{}]", value);
+    char value[1 + MAX_TREE_CHAR_SIZE];
+    fscanf(database_file, "{%"TO_STRING(MAX_TREE_CHAR_SIZE)"[^{}]", value);
 
     if (strcmp(value, "nil") == 0) {
         *node = NULL;
@@ -301,11 +301,11 @@ static AkinatorError AkinatorGetAnswerList(TreeNode* node, const char* name, cha
         return AKINATOR_OK;
     }
 
-    char left_answer_list[MAX_ANSWER_LIST_LEN] = {};
+    char left_answer_list[1 + MAX_ANSWER_LIST_LEN] = {};
     snprintf(left_answer_list, MAX_ANSWER_LIST_LEN, "%sn", cur_ans_list);
     AkinatorGetAnswerList(TreeNodeGetLeft(node), name, left_answer_list, ans_list);
 
-    char right_answer_list[MAX_ANSWER_LIST_LEN] = {};
+    char right_answer_list[1 + MAX_ANSWER_LIST_LEN] = {};
     snprintf(right_answer_list, MAX_ANSWER_LIST_LEN, "%sy", cur_ans_list);
     AkinatorGetAnswerList(TreeNodeGetRight(node), name, right_answer_list, ans_list);
 
@@ -317,12 +317,12 @@ AkinatorError AkinatorFind(Tree* akinator_tree) {
 
     printf("Кого вы хотите найти?\n");
 
-    char name[MAX_NAME_LEN] = {};
-    scanf("\n%[^\n]", name);
+    char name[1 + MAX_NAME_LEN] = {};
+    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
 
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
 
-    char ans_list[MAX_ANSWER_LIST_LEN] = {};
+    char ans_list[1 + MAX_ANSWER_LIST_LEN] = {};
     AkinatorGetAnswerList(first_node, name, "", ans_list);
 
     size_t ans_list_len = strlen(ans_list);
@@ -360,19 +360,19 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
 
     printf("Кого вы хотите сравнить? Напишите в отдельные строчки по очереди:\n");
 
-    char name1[MAX_NAME_LEN] = {};
-    scanf("\n%[^\n]", name1);
+    char name1[1 + MAX_NAME_LEN] = {};
+    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name1);
 
-    char name2[MAX_NAME_LEN] = {};
-    scanf("\n%[^\n]", name2);
+    char name2[1 + MAX_NAME_LEN] = {};
+    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name2);
 
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
     
-    char ans_list1[MAX_ANSWER_LIST_LEN] = {};
+    char ans_list1[1 + MAX_ANSWER_LIST_LEN] = {};
     AkinatorGetAnswerList(first_node, name1, "", ans_list1);
     size_t ans_list1_len = strlen(ans_list1);
 
-    char ans_list2[MAX_ANSWER_LIST_LEN] = {};
+    char ans_list2[1 + MAX_ANSWER_LIST_LEN] = {};
     AkinatorGetAnswerList(first_node, name2, "", ans_list2);
     size_t ans_list2_len = strlen(ans_list2);
 
@@ -381,14 +381,14 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
         common_ans_cnt++;
     }
 
-    char common_ans_list[MAX_ANSWER_LIST_LEN] = {};
+    char common_ans_list[1 + MAX_ANSWER_LIST_LEN] = {};
     strncpy(common_ans_list, ans_list1, common_ans_cnt);
 
-    char different_ans1[MAX_ANSWER_LIST_LEN] = {};
+    char different_ans1[1 + MAX_ANSWER_LIST_LEN] = {};
     strncpy(different_ans1, ans_list1 + common_ans_cnt, MAX_ANSWER_LIST_LEN);
     size_t dif_ans1_len = ans_list1_len - common_ans_cnt;
 
-    char different_ans2[MAX_ANSWER_LIST_LEN];
+    char different_ans2[1 + MAX_ANSWER_LIST_LEN];
     strncpy(different_ans2, ans_list2 + common_ans_cnt, MAX_ANSWER_LIST_LEN);
     size_t dif_ans2_len = ans_list2_len - common_ans_cnt;
 
