@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "utils.hpp"
+
 const char* AkinatorStrError(AkinatorError error) {
     switch (error) {
         case AKINATOR_OK:
@@ -64,11 +66,11 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
     else {
         printf("А кого вы загадали?\n");
         char name[1 + MAX_NAME_LEN] = "";
-        scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
+        scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
 
         printf("Чем он(а) отличается от моего варианта? Он(а)(ваш вариант) ....\n");
         char attribute[1 + MAX_ATTRIBUTE_LEN] = "";
-        scanf("\n%"TO_STRING(MAX_ATTRIBUTE_LEN)"[^\n]", attribute);
+        scanf("%"TO_STRING(MAX_ATTRIBUTE_LEN)"[^\n]", attribute);
 
         TreeNode* current_answer = node;
         TreeNode* parent = TreeNodeGetParent(current_answer);
@@ -100,37 +102,6 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
 
         printf("Спасибо, я его запомнил!\n");
     }
-
-    return AKINATOR_OK;
-}
-
-static AkinatorError AkinatorDontKnowHandle(TreeNode* node_parent) {
-    assert(node_parent != NULL);
-
-    printf("Я не знаю такого!\n");
-
-    printf("А кого вы загадали?\n");
-    char name[1 + MAX_NAME_LEN] = "";
-    scanf("%"TO_STRING(MAX_ANSWER_LEN)"s", name);
-
-    TreeNode* new_answer = TreeNodeInit(name);
-    if (new_answer == NULL) {
-        return AKINATOR_NODE_ALLOC_ERROR;
-    }
-
-    if (node_parent->left == NULL) {
-        if (TreeNodeLinkLeft(node_parent, new_answer) != TREE_OK) {
-            return AKINATOR_TREE_ERROR;
-        }
-    }
-
-    else {
-        if (TreeNodeLinkRight(node_parent, new_answer) != TREE_OK) {
-            return AKINATOR_TREE_ERROR;
-        }
-    }
-
-    printf("Спасибо, я его запомнил!\n");
 
     return AKINATOR_OK;
 }
@@ -179,18 +150,6 @@ AkinatorError AkinatorRequest(Tree* akinator_tree) {
             break;
         }
 
-
-        //FIXME кажется можно удалить
-        bool is_dont_know = node == NULL;
-        if (is_dont_know) {
-            AkinatorError ans_handle_err = AkinatorDontKnowHandle(node_parent);
-            if (ans_handle_err != AKINATOR_OK) {
-                return ans_handle_err;
-            }
-
-            break;
-        }
-
         AkinatorError ans_handle_err = AkinatorQuestionHandle(&node, &node_parent);
         if (ans_handle_err != AKINATOR_OK) {
             return ans_handle_err;
@@ -221,6 +180,7 @@ static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file) 
     return AKINATOR_OK;
 }
 
+//FIXME форматировать ввод
 AkinatorError AkinatorTreeSave(Tree* akinator_tree) {
     assert(akinator_tree != NULL);
 
@@ -318,7 +278,7 @@ AkinatorError AkinatorFind(Tree* akinator_tree) {
     printf("Кого вы хотите найти?\n");
 
     char name[1 + MAX_NAME_LEN] = {};
-    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
+    scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
 
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
 
@@ -361,10 +321,10 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
     printf("Кого вы хотите сравнить? Напишите в отдельные строчки по очереди:\n");
 
     char name1[1 + MAX_NAME_LEN] = {};
-    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name1);
+    scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name1);
 
     char name2[1 + MAX_NAME_LEN] = {};
-    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name2);
+    scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name2);
 
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
     

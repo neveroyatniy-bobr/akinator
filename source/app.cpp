@@ -3,10 +3,7 @@
 
 #include "akinator.hpp"
 #include "tree.hpp"
-
-static void CleanBuffer() {
-    while (getchar() != '\n') { }
-}
+#include "utils.hpp"
 
 AkinatorError AkinatorApp() {
     Tree akinator_tree = {};
@@ -17,6 +14,8 @@ AkinatorError AkinatorApp() {
         TREE_DUMP(&akinator_tree);
         return init_error;
     }
+
+    TREE_DUMP(&akinator_tree); // FIXME  дамп красивый
 
     bool run = true;
 

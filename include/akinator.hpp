@@ -11,9 +11,6 @@
 #define MAX_ANSWER_LIST_LEN 256
 #define MAX_ANSWER_LEN 8
 
-#define TO_STRING_(x) #x
-#define TO_STRING(x) TO_STRING_(x)
-
 static const char* AKINATOR_DATABASE_FILE_NAME = "database.aki";
 
 #define FIRST_NODE_NAME "Ничего"

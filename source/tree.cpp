@@ -5,7 +5,7 @@
 #include <string.h>
 #include <errno.h>
 
-#include "protected_free.hpp"
+#include "utils.hpp"
 
 const char* TreeStrError(TreeError error) {
     switch (error) {
