@@ -10,4 +10,6 @@ void CleanBuffer();
 #define TO_STRING_(x) #x
 #define TO_STRING(x) TO_STRING_(x)
 
+void SkipSpaces(FILE* stream);
+
 #endif // PROTECTED_FREE_HPP_

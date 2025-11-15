@@ -159,28 +159,31 @@ AkinatorError AkinatorRequest(Tree* akinator_tree) {
     return AKINATOR_OK;
 }
 
-static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file) {
+static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file, size_t tab_count) {
     assert(database_file != NULL);
 
     if (node == NULL) {
-        fprintf(database_file, "{nil}");
+        for (size_t tab_i = 0; tab_i < tab_count; tab_i++) { fprintf(database_file, "\t"); }
+        fprintf(database_file, "{nil}\n");
         return AKINATOR_OK;
     }
+    
+    for (size_t tab_i = 0; tab_i < tab_count; tab_i++) { fprintf(database_file, "\t"); }
+    fprintf(database_file, "{\n");
 
-    fprintf(database_file, "{");
+    for (size_t tab_i = 0; tab_i < tab_count; tab_i++) { fprintf(database_file, "\t"); }
+    fprintf(database_file, "%s\n", TreeNodeGetValue(node));
 
-    fprintf(database_file, "%s", TreeNodeGetValue(node));
+    AkinatorBuildSaveFile(TreeNodeGetLeft(node), database_file, tab_count + 1);
 
-    AkinatorBuildSaveFile(TreeNodeGetLeft(node), database_file);
+    AkinatorBuildSaveFile(TreeNodeGetRight(node), database_file, tab_count + 1);
 
-    AkinatorBuildSaveFile(TreeNodeGetRight(node), database_file);
-
-    fprintf(database_file, "}");
+    for (size_t tab_i = 0; tab_i < tab_count; tab_i++) { fprintf(database_file, "\t"); }
+    fprintf(database_file, "}\n");
 
     return AKINATOR_OK;
 }
 
-//FIXME форматировать ввод
 AkinatorError AkinatorTreeSave(Tree* akinator_tree) {
     assert(akinator_tree != NULL);
 
@@ -190,7 +193,7 @@ AkinatorError AkinatorTreeSave(Tree* akinator_tree) {
     }
 
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
-    AkinatorError build_err = AkinatorBuildSaveFile(first_node, database_file);
+    AkinatorError build_err = AkinatorBuildSaveFile(first_node, database_file, 0);
     if (build_err != AKINATOR_OK) {
         return build_err;
     }
@@ -208,11 +211,14 @@ static AkinatorError AkinatorTreeBuild(TreeNode** node, TreeNode* node_parent, F
     TreeNode* loc_node = *node;
 
     char value[1 + MAX_TREE_CHAR_SIZE];
-    fscanf(database_file, "{%"TO_STRING(MAX_TREE_CHAR_SIZE)"[^{}]", value);
+    fscanf(database_file, "{");
+    SkipSpaces(database_file);
+    fscanf(database_file, "%"TO_STRING(MAX_TREE_CHAR_SIZE)"[^\n]", value);
 
-    if (strcmp(value, "nil") == 0) {
+    SkipSpaces(database_file);
+
+    if (strcmp(value, "nil}") == 0) {
         *node = NULL;
-        fscanf(database_file, "}");
         return AKINATOR_OK;
     }
 
@@ -223,6 +229,8 @@ static AkinatorError AkinatorTreeBuild(TreeNode** node, TreeNode* node_parent, F
     AkinatorTreeBuild(&loc_node->right, loc_node, database_file);
     
     fscanf(database_file, "}");
+
+    SkipSpaces(database_file);
 
     *node = loc_node;
 
