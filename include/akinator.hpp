@@ -5,8 +5,6 @@
 
 #include "tree.hpp"
 
-#define NO_VOICE
-
 #define MAX_NAME_LEN 128
 #define MAX_ATTRIBUTE_LEN 128
 #define MAX_QUESTION_LEN 256

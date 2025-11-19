@@ -27,13 +27,13 @@ AkinatorError AkinatorApp() {
     bool run = true;
 
     while (run) {
-        printf("Что вы хотите сделать?\n");
-        printf("1) Поиграть\n");
-        printf("2) Найти\n");
-        printf("3) Сравнить\n");
-        printf("4) Сохранить\n");
-        printf("5) Загрузить\n");
-        printf("6) Выйти\n");
+        AkinatorPrintf("Что вы хотите сделать?\n");
+        AkinatorPrintf("1) Поиграть\n");
+        AkinatorPrintf("2) Найти\n");
+        AkinatorPrintf("3) Сравнить\n");
+        AkinatorPrintf("4) Сохранить\n");
+        AkinatorPrintf("5) Загрузить\n");
+        AkinatorPrintf("6) Выйти\n");
 
 
         int mode_num = 0;
@@ -64,7 +64,7 @@ AkinatorError AkinatorApp() {
                 run = false;
                 break;
             default:
-                printf("Неправильная команда\n");
+                AkinatorPrintf("Неправильная команда\n");
                 break;
         }
 
