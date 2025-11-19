@@ -36,15 +36,11 @@ AkinatorError AkinatorTreeInit(Tree* akinator_tree) {
         return AKINATOR_TREE_ERROR;
     }
 
-    AkinatorTreeLoad(akinator_tree);
-
     return AKINATOR_OK;
 }
 
 AkinatorError AkinatorTreeDestroy(Tree* akinator_tree) {
-    assert(akinator_tree != NULL);
-
-    AkinatorTreeSave(akinator_tree);    
+    assert(akinator_tree != NULL);    
 
     if (TreeDestroy(akinator_tree) != TREE_OK) {
         return AKINATOR_TREE_ERROR;
@@ -66,11 +62,11 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
     else {
         printf("А кого вы загадали?\n");
         char name[1 + MAX_NAME_LEN] = "";
-        scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
+        scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
 
         printf("Чем он(а) отличается от моего варианта? Он(а)(ваш вариант) ....\n");
         char attribute[1 + MAX_ATTRIBUTE_LEN] = "";
-        scanf("%"TO_STRING(MAX_ATTRIBUTE_LEN)"[^\n]", attribute);
+        scanf("\n%"TO_STRING(MAX_ATTRIBUTE_LEN)"[^\n]", attribute);
 
         TreeNode* current_answer = node;
         TreeNode* parent = TreeNodeGetParent(current_answer);
@@ -187,7 +183,15 @@ static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file, 
 AkinatorError AkinatorTreeSave(Tree* akinator_tree) {
     assert(akinator_tree != NULL);
 
-    FILE* database_file = fopen(AKINATOR_DATABASE_FILE_NAME, "w");
+    printf("В какую базу данных вы хотите загрузить акинатора(введите имя файла):\n");
+    char database_file_name[MAX_FILE_NAME_LEN + 1] = {};
+    scanf("\n%"TO_STRING(MAX_FILE_NAME_LEN)"[^\n]", database_file_name);
+
+    if (strlen(database_file_name) == 0) {
+        snprintf(database_file_name, MAX_FILE_NAME_LEN, "%s", AKINATOR_STD_DATABASE_FILE_NAME);
+    }
+
+    FILE* database_file = fopen(database_file_name, "w");
     if (database_file == NULL) {
         return AKINATOR_DATABASE_FILE_CREATE_ERROR;
     }
@@ -213,7 +217,7 @@ static AkinatorError AkinatorTreeBuild(TreeNode** node, TreeNode* node_parent, F
     char value[1 + MAX_TREE_CHAR_SIZE];
     fscanf(database_file, "{");
     SkipSpaces(database_file);
-    fscanf(database_file, "%"TO_STRING(MAX_TREE_CHAR_SIZE)"[^\n]", value);
+    fscanf(database_file, "%"TO_STRING(MAX_TREE_CHAR_SIZE)"[^\n]", value); //FIXME как пофиксить ввод?
 
     SkipSpaces(database_file);
 
@@ -237,10 +241,45 @@ static AkinatorError AkinatorTreeBuild(TreeNode** node, TreeNode* node_parent, F
     return AKINATOR_OK;
 }
 
+static AkinatorError AkinatorDatabaseFillIfEmpty(const char* database_file_name) {
+    FILE* database_file = fopen(database_file_name, "a");
+
+    if (database_file == NULL) {
+        return AKINATOR_DATABASE_FILE_CREATE_ERROR;
+    }
+
+    if (FileSize(database_file) == 0) {
+        fwrite(AKINATOR_VOID_DATABASE, 1, sizeof(AKINATOR_VOID_DATABASE), database_file);
+    }
+
+    fclose(database_file);
+
+    return AKINATOR_OK;
+}
+
 AkinatorError AkinatorTreeLoad(Tree* akinator_tree) {
     assert(akinator_tree != NULL);
 
-    FILE* database_file = fopen(AKINATOR_DATABASE_FILE_NAME, "r");
+    if (akinator_tree->root != NULL) {
+        AkinatorTreeDestroy(akinator_tree);
+
+        AkinatorError init_error = AkinatorTreeInit(akinator_tree);
+        if (init_error != AKINATOR_OK) {
+            return init_error;
+        }
+    }
+
+    printf("Из какой базы данных вы хотите загрузить акинатора(введите имя файла):\n");
+    char database_file_name[MAX_FILE_NAME_LEN + 1] = {};
+    scanf("%"TO_STRING(MAX_FILE_NAME_LEN)"[^\n]", database_file_name);
+
+    if (strlen(database_file_name) == 0) {
+        snprintf(database_file_name, MAX_FILE_NAME_LEN, "%s", AKINATOR_STD_DATABASE_FILE_NAME);
+    }
+
+    AkinatorDatabaseFillIfEmpty(database_file_name);
+
+    FILE* database_file = fopen(database_file_name, "r");
     if (database_file == NULL) {
         return AKINATOR_DATABASE_FILE_OPEN_ERROR;
     }
@@ -286,7 +325,7 @@ AkinatorError AkinatorFind(Tree* akinator_tree) {
     printf("Кого вы хотите найти?\n");
 
     char name[1 + MAX_NAME_LEN] = {};
-    scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
+    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
 
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
 
@@ -329,10 +368,10 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
     printf("Кого вы хотите сравнить? Напишите в отдельные строчки по очереди:\n");
 
     char name1[1 + MAX_NAME_LEN] = {};
-    scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name1);
+    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name1);
 
     char name2[1 + MAX_NAME_LEN] = {};
-    scanf("%"TO_STRING(MAX_NAME_LEN)"[^\n]", name2);
+    scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name2);
 
     TreeNode* first_node = TreeNodeGetLeft(TreeGetRoot(akinator_tree));
     

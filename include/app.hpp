@@ -7,7 +7,9 @@ enum AkinatorAppMode {
     PLAY      =  0,
     FIND      =  1,
     COMPARE   =  2,
-    QUIT      =  3
+    SAVE      =  3,
+    LOAD      =  4,
+    QUIT      =  5
 };
 
 AkinatorError AkinatorApp();

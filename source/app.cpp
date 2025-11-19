@@ -15,7 +15,14 @@ AkinatorError AkinatorApp() {
         return init_error;
     }
 
-    TREE_DUMP(&akinator_tree); // FIXME  дамп красивый
+    AkinatorError load_err = AkinatorTreeLoad(&akinator_tree);
+    if (load_err != AKINATOR_OK) {
+        AKINATOR_PRINT_ERROR(init_error);
+        TREE_DUMP(&akinator_tree);
+        return load_err;
+    }
+
+    TREE_DUMP(&akinator_tree);
 
     bool run = true;
 
@@ -24,7 +31,9 @@ AkinatorError AkinatorApp() {
         printf("1) Поиграть\n");
         printf("2) Найти\n");
         printf("3) Сравнить\n");
-        printf("4) Выйти\n");
+        printf("4) Сохранить\n");
+        printf("5) Загрузить\n");
+        printf("6) Выйти\n");
 
 
         int mode_num = 0;
@@ -45,6 +54,12 @@ AkinatorError AkinatorApp() {
             case COMPARE:
                 mode_error = AkinatorCompare(&akinator_tree);
                 break;
+            case SAVE:
+                mode_error = AkinatorTreeSave(&akinator_tree);
+                break;
+            case LOAD:
+                mode_error = AkinatorTreeLoad(&akinator_tree);
+                break;
             case QUIT:
                 run = false;
                 break;
@@ -58,6 +73,8 @@ AkinatorError AkinatorApp() {
             return mode_error;
         }
     }
+
+    AkinatorTreeSave(&akinator_tree);
 
     AkinatorTreeDestroy(&akinator_tree);
 

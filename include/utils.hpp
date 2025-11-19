@@ -12,4 +12,6 @@ void CleanBuffer();
 
 void SkipSpaces(FILE* stream);
 
+size_t FileSize(FILE* file);
+
 #endif // PROTECTED_FREE_HPP_

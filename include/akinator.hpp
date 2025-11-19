@@ -10,10 +10,10 @@
 #define MAX_QUESTION_LEN 256
 #define MAX_ANSWER_LIST_LEN 256
 #define MAX_ANSWER_LEN 8
+#define MAX_FILE_NAME_LEN 256
 
-static const char* AKINATOR_DATABASE_FILE_NAME = "database.aki";
-
-#define FIRST_NODE_NAME "Ничего"
+static const char* AKINATOR_STD_DATABASE_FILE_NAME = "database.aki";
+static const char AKINATOR_VOID_DATABASE[] = "{\n\tничего\n\t{nil}\n\t{nil}\n}\n";
 
 enum AkinatorError {
     AKINATOR_OK                         =  0,
