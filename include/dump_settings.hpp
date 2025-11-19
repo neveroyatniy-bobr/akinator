@@ -8,9 +8,13 @@ static const char* LEFT_EDGE_COLOR = "red";
 static const char* RIGHT_EDGE_COLOR = "green";
 
 static const char* ROOT_NODE_COLOR = "red";
+static const size_t ROOT_NODE_PEN_WIDTH = 4;
+
 static const char* OBJECT_NODE_COLOR = "green";
+static const size_t OBJECT_NODE_PEN_WIDTH = 4;
+
 static const char* ATTRIBUTE_NODE_COLOR = "purple";
-static const size_t COLOR_PEN_WIDTH = 2;
+static const size_t ATTRIBUTE_NODE_PEN_WIDTH = 2;
 
 static const unsigned int DUMP_FONT_SIZE = 36;
 
