@@ -5,6 +5,7 @@
 #include <string.h>
 #include <errno.h>
 
+#include "dump_settings.hpp"
 #include "utils.hpp"
 
 const char* TreeStrError(TreeError error) {
@@ -146,7 +147,12 @@ static void TreeNodesBuildDump(FILE* build_dump_file, TreeNode* node) {
 
     TreeNode* right = TreeNodeGetRight(node);
 
-    fprintf(build_dump_file, "    node_%p [label=\"value = %s\\nself = %p\\nparent = %p\\nleft = %p\\nright = %p\"];\n", node, value, node, parent, left, right);
+    if (node->left == NULL && node->right == NULL) {
+        fprintf(build_dump_file, "    node_%p [label=\"value = %s\\nself = %p\\nparent = %p\\nleft = %p\\nright = %p\", color = \"%s\", penwidth = %lu];\n", node, value, node, parent, left, right, OBJECT_NODE_COLOR, COLOR_PEN_WIDTH);
+    }
+    else {
+        fprintf(build_dump_file, "    node_%p [label=\"value = %s\\nself = %p\\nparent = %p\\nleft = %p\\nright = %p\", color = \"%s\", penwidth = %lu];\n", node, value, node, parent, left, right, ATTRIBUTE_NODE_COLOR, COLOR_PEN_WIDTH);
+    }
 
     if (node->left != NULL) {
         TreeNodesBuildDump(build_dump_file, node->left);
@@ -168,15 +174,15 @@ static void TreeEdgesBuildDump(FILE* build_dump_file, TreeNode* node) {
     TreeNode* right = TreeNodeGetRight(node);
 
     if (parent != NULL) {
-        fprintf(build_dump_file, "    node_%p -> node_%p [label = \"parent\"];\n", node, parent);
+        fprintf(build_dump_file, "    node_%p -> node_%p [label = \"parent\", color = \"%s\"];\n", node, parent, PARENT_EDGE_COLOR);
     }
 
     if (left != NULL) {
-        fprintf(build_dump_file, "    node_%p -> node_%p [label = \"left\"];\n", node, left);
+        fprintf(build_dump_file, "    node_%p -> node_%p [label = \"left\", color = \"%s\"];\n", node, left, LEFT_EDGE_COLOR);
     }
 
     if (right != NULL) {
-        fprintf(build_dump_file, "    node_%p -> node_%p [label = \"right\"];\n", node, right);
+        fprintf(build_dump_file, "    node_%p -> node_%p [label = \"right\", color = \"%s\"];\n", node, right, RIGHT_EDGE_COLOR);
     }
 
     if (node->left != NULL) {
@@ -247,6 +253,8 @@ void TreeDump(Tree* tree, const char* file, int line) {
     fprintf(build_dump_file, "\n");
 
     TreeEdgesBuildDump(build_dump_file, tree->root);
+
+    fprintf(build_dump_file, "    node_%p [color = %s, penwidth = %lu]\n", tree->root, ROOT_NODE_COLOR, COLOR_PEN_WIDTH);
 
     fprintf(build_dump_file, "}");
 
