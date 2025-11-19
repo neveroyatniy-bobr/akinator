@@ -38,7 +38,7 @@ AkinatorError AkinatorRequest(Tree* akinator_tree);
 
 AkinatorError AkinatorTreeSave(Tree* akinator_tree);
 
-AkinatorError AkinatorTreeLoad(Tree* akinator_tree);
+AkinatorError AkinatorTreeLoad(Tree* akinator_tree, bool is_fast_load, char database_file_name[MAX_FILE_NAME_LEN + 1]);
 
 AkinatorError AkinatorFind(Tree* akinator_tree);
 

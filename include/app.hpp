@@ -12,6 +12,6 @@ enum AkinatorAppMode {
     QUIT      =  5
 };
 
-AkinatorError AkinatorApp();
+AkinatorError AkinatorApp(int argc, const char** argv);
 
 #endif // APP_HPP_

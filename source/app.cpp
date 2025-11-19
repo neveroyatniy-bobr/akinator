@@ -5,8 +5,17 @@
 #include "tree.hpp"
 #include "utils.hpp"
 
-AkinatorError AkinatorApp() {
+AkinatorError AkinatorApp(int argc, const char** argv) {
     Tree akinator_tree = {};
+
+    bool is_fast_load = false;
+    char database_file_name[MAX_FILE_NAME_LEN + 1] = {};
+    if (argc == 3) {
+        if (strcmp(argv[1], "-f") == 0 || strcmp(argv[1], "-file") == 0) {
+            is_fast_load = true;
+            strncpy(database_file_name, argv[2], MAX_FILE_NAME_LEN);
+        }
+    }
 
     AkinatorError init_error = AkinatorTreeInit(&akinator_tree);
     if (init_error != AKINATOR_OK) {
@@ -15,7 +24,7 @@ AkinatorError AkinatorApp() {
         return init_error;
     }
 
-    AkinatorError load_err = AkinatorTreeLoad(&akinator_tree);
+    AkinatorError load_err = AkinatorTreeLoad(&akinator_tree, is_fast_load, database_file_name);
     if (load_err != AKINATOR_OK) {
         AKINATOR_PRINT_ERROR(init_error);
         TREE_DUMP(&akinator_tree);
@@ -58,7 +67,7 @@ AkinatorError AkinatorApp() {
                 mode_error = AkinatorTreeSave(&akinator_tree);
                 break;
             case LOAD:
-                mode_error = AkinatorTreeLoad(&akinator_tree);
+                mode_error = AkinatorTreeLoad(&akinator_tree, false, NULL);
                 break;
             case QUIT:
                 run = false;

@@ -258,7 +258,7 @@ static AkinatorError AkinatorDatabaseFillIfEmpty(const char* database_file_name)
     return AKINATOR_OK;
 }
 
-AkinatorError AkinatorTreeLoad(Tree* akinator_tree) {
+AkinatorError AkinatorTreeLoad(Tree* akinator_tree, bool is_fast_load, char database_file_name[MAX_FILE_NAME_LEN + 1]) {
     assert(akinator_tree != NULL);
 
     if (akinator_tree->root != NULL) {
@@ -270,17 +270,23 @@ AkinatorError AkinatorTreeLoad(Tree* akinator_tree) {
         }
     }
 
-    AkinatorPrintf("Из какой базы данных вы хотите загрузить акинатора(введите имя файла):\n");
-    char database_file_name[MAX_FILE_NAME_LEN + 1] = {};
-    scanf("%"TO_STRING(MAX_FILE_NAME_LEN)"[^\n]", database_file_name);
-
-    if (strlen(database_file_name) == 0) {
-        snprintf(database_file_name, MAX_FILE_NAME_LEN, "%s", AKINATOR_STD_DATABASE_FILE_NAME);
+    char loc_database_file_name[MAX_FILE_NAME_LEN + 1] = {};
+    
+    if (is_fast_load) {
+        strncpy(loc_database_file_name, database_file_name, MAX_FILE_NAME_LEN);
+    }
+    else {
+        AkinatorPrintf("Из какой базы данных вы хотите загрузить акинатора(введите имя файла):\n");
+        scanf("%"TO_STRING(MAX_FILE_NAME_LEN)"[^\n]", loc_database_file_name);
     }
 
-    AkinatorDatabaseFillIfEmpty(database_file_name);
+    if (strlen(loc_database_file_name) == 0) {
+        snprintf(loc_database_file_name, MAX_FILE_NAME_LEN, "%s", AKINATOR_STD_DATABASE_FILE_NAME);
+    }
 
-    FILE* database_file = fopen(database_file_name, "r");
+    AkinatorDatabaseFillIfEmpty(loc_database_file_name);
+
+    FILE* database_file = fopen(loc_database_file_name, "r");
     if (database_file == NULL) {
         return AKINATOR_DATABASE_FILE_OPEN_ERROR;
     }
