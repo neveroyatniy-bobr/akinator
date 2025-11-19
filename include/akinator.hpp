@@ -5,12 +5,15 @@
 
 #include "tree.hpp"
 
+#define NO_VOICE
+
 #define MAX_NAME_LEN 128
 #define MAX_ATTRIBUTE_LEN 128
 #define MAX_QUESTION_LEN 256
 #define MAX_ANSWER_LIST_LEN 256
 #define MAX_ANSWER_LEN 8
 #define MAX_FILE_NAME_LEN 256
+#define MAX_PRINT_COMMAND_SIZE 256
 
 static const char* AKINATOR_STD_DATABASE_FILE_NAME = "database.aki";
 static const char AKINATOR_VOID_DATABASE[] = "{\n\tничего\n\t{nil}\n\t{nil}\n}\n";
@@ -42,5 +45,7 @@ AkinatorError AkinatorTreeLoad(Tree* akinator_tree);
 AkinatorError AkinatorFind(Tree* akinator_tree);
 
 AkinatorError AkinatorCompare(Tree* akinator_tree);
+
+AkinatorError AkinatorPrintf(const char* format, ...);
 
 #endif // AKINATOR_HPP_

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <stdarg.h>
 
 #include "utils.hpp"
 
@@ -51,20 +52,20 @@ AkinatorError AkinatorTreeDestroy(Tree* akinator_tree) {
 static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
     assert(node != NULL);
 
-    printf("Вы загадали %s?\n", TreeNodeGetValue(node));
+    AkinatorPrintf("Вы загадали %s?\n", TreeNodeGetValue(node));
 
     char yes_or_no[1 + MAX_ANSWER_LEN];
     scanf("%"TO_STRING(MAX_ANSWER_LEN)"s", yes_or_no);
 
     if (strcmp(yes_or_no, "да") == 0) {
-        printf("Я крут!\n");
+        AkinatorPrintf("Я крут!\n");
     }
     else {
-        printf("А кого вы загадали?\n");
+        AkinatorPrintf("А кого вы загадали?\n");
         char name[1 + MAX_NAME_LEN] = "";
         scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
 
-        printf("Чем он(а) отличается от моего варианта? Он(а)(ваш вариант) ....\n");
+        AkinatorPrintf("Чем он(а) отличается от моего варианта? Он(а)(ваш вариант) ....\n");
         char attribute[1 + MAX_ATTRIBUTE_LEN] = "";
         scanf("\n%"TO_STRING(MAX_ATTRIBUTE_LEN)"[^\n]", attribute);
 
@@ -96,7 +97,7 @@ static AkinatorError AkinatorAnswerHandle(TreeNode* node) {
             return AKINATOR_TREE_ERROR;
         }
 
-        printf("Спасибо, я его запомнил!\n");
+        AkinatorPrintf("Спасибо, я его запомнил!\n");
     }
 
     return AKINATOR_OK;
@@ -109,7 +110,7 @@ static AkinatorError AkinatorQuestionHandle(TreeNode** node, TreeNode** node_par
     TreeNode* loc_node = *node;
     TreeNode* loc_node_parent = *node_parent;
 
-    printf("Он(a) %s?\n", TreeNodeGetValue(loc_node));
+    AkinatorPrintf("Он(a) %s?\n", TreeNodeGetValue(loc_node));
 
     char yes_or_no[1 + MAX_ANSWER_LEN] = "";
     scanf("%"TO_STRING(MAX_ANSWER_LEN)"s", yes_or_no);
@@ -183,7 +184,7 @@ static AkinatorError AkinatorBuildSaveFile(TreeNode* node, FILE* database_file, 
 AkinatorError AkinatorTreeSave(Tree* akinator_tree) {
     assert(akinator_tree != NULL);
 
-    printf("В какую базу данных вы хотите загрузить акинатора(введите имя файла):\n");
+    AkinatorPrintf("В какую базу данных вы хотите загрузить акинатора(введите имя файла):\n");
     char database_file_name[MAX_FILE_NAME_LEN + 1] = {};
     scanf("\n%"TO_STRING(MAX_FILE_NAME_LEN)"[^\n]", database_file_name);
 
@@ -269,7 +270,7 @@ AkinatorError AkinatorTreeLoad(Tree* akinator_tree) {
         }
     }
 
-    printf("Из какой базы данных вы хотите загрузить акинатора(введите имя файла):\n");
+    AkinatorPrintf("Из какой базы данных вы хотите загрузить акинатора(введите имя файла):\n");
     char database_file_name[MAX_FILE_NAME_LEN + 1] = {};
     scanf("%"TO_STRING(MAX_FILE_NAME_LEN)"[^\n]", database_file_name);
 
@@ -322,7 +323,7 @@ static AkinatorError AkinatorGetAnswerList(TreeNode* node, const char* name, cha
 AkinatorError AkinatorFind(Tree* akinator_tree) {
     assert(akinator_tree != NULL);
 
-    printf("Кого вы хотите найти?\n");
+    AkinatorPrintf("Кого вы хотите найти?\n");
 
     char name[1 + MAX_NAME_LEN] = {};
     scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name);
@@ -335,19 +336,19 @@ AkinatorError AkinatorFind(Tree* akinator_tree) {
     size_t ans_list_len = strlen(ans_list);
 
     if (ans_list_len == 0) {
-        printf("Я его не знаю\n");
+        AkinatorPrintf("Я его не знаю\n");
         return AKINATOR_OK;
     }
 
-    printf("Он(а) ");
+    AkinatorPrintf("Он(а) ");
 
     TreeNode* node = first_node;
     for (size_t ans_i = 0; ans_i < ans_list_len; ans_i++) {
         if (ans_list[ans_i] == 'n') {
-            printf("не ");
+            AkinatorPrintf("не ");
         }
 
-        printf("%s ", TreeNodeGetValue(node));
+        AkinatorPrintf("%s ", TreeNodeGetValue(node));
 
         if (ans_list[ans_i] == 'n') {
             node = TreeNodeGetLeft(node);
@@ -357,7 +358,7 @@ AkinatorError AkinatorFind(Tree* akinator_tree) {
         }
     }
 
-    printf("\n");
+    AkinatorPrintf("\n");
 
     return AKINATOR_OK;
 }
@@ -365,7 +366,7 @@ AkinatorError AkinatorFind(Tree* akinator_tree) {
 AkinatorError AkinatorCompare(Tree* akinator_tree) {
     assert(akinator_tree != NULL);
 
-    printf("Кого вы хотите сравнить? Напишите в отдельные строчки по очереди:\n");
+    AkinatorPrintf("Кого вы хотите сравнить? Напишите в отдельные строчки по очереди:\n");
 
     char name1[1 + MAX_NAME_LEN] = {};
     scanf("\n%"TO_STRING(MAX_NAME_LEN)"[^\n]", name1);
@@ -402,18 +403,18 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
     TreeNode* last_common_node = NULL;
 
     if (common_ans_cnt == 0) {
-        printf("Они ничем не похожи\n");
+        AkinatorPrintf("Они ничем не похожи\n");
     }
     else {
-        printf("Каждый из них ");
+        AkinatorPrintf("Каждый из них ");
 
         TreeNode* node = first_node;
         for (size_t common_ans_i = 0; common_ans_i < common_ans_cnt; common_ans_i++) {
             if (common_ans_list[common_ans_i] == 'n') {
-                printf("не ");
+                AkinatorPrintf("не ");
             }
 
-            printf("%s ", TreeNodeGetValue(node));
+            AkinatorPrintf("%s ", TreeNodeGetValue(node));
 
             if (common_ans_list[common_ans_i] == 'n') {
                 node = TreeNodeGetLeft(node);
@@ -425,14 +426,14 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
         
         last_common_node = TreeNodeGetParent(node);
 
-        printf("\n");
+        AkinatorPrintf("\n");
     }
 
     if (ans_list1_len - common_ans_cnt == 0) {
-        printf("Они ничем не отличаются");
+        AkinatorPrintf("Они ничем не отличаются");
     }
     else {
-        printf("Первый уникален тем что он: ");
+        AkinatorPrintf("Первый уникален тем что он: ");
 
         TreeNode* node1 = NULL;
         if (common_ans_list[common_ans_cnt - 1] == 'n') {
@@ -444,10 +445,10 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
 
         for (size_t ans1_i = 0; ans1_i < dif_ans1_len; ans1_i++) {
             if (different_ans1[ans1_i] == 'n') {
-                printf("не ");
+                AkinatorPrintf("не ");
             }
 
-            printf("%s ", TreeNodeGetValue(node1));
+            AkinatorPrintf("%s ", TreeNodeGetValue(node1));
 
             if (different_ans1[ans1_i] == 'n') {
                 node1 = TreeNodeGetLeft(node1);
@@ -457,9 +458,9 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
             }
         }
 
-        printf("\n");
+        AkinatorPrintf("\n");
 
-        printf("Второй уникален тем что он: ");
+        AkinatorPrintf("Второй уникален тем что он: ");
 
         TreeNode* node2 = NULL;
         if (common_ans_list[common_ans_cnt - 1] == 'n') {
@@ -471,10 +472,10 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
 
         for (size_t ans2_i = 0; ans2_i < dif_ans2_len; ans2_i++) {
             if (different_ans2[ans2_i] == 'n') {
-                printf("не ");
+                AkinatorPrintf("не ");
             }
 
-            printf("%s ", TreeNodeGetValue(node2));
+            AkinatorPrintf("%s ", TreeNodeGetValue(node2));
 
             if (different_ans2[ans2_i] == 'n') {
                 node2 = TreeNodeGetLeft(node2);
@@ -484,8 +485,40 @@ AkinatorError AkinatorCompare(Tree* akinator_tree) {
             }
         }
 
-        printf("\n");
+        AkinatorPrintf("\n");
     }
 
     return AKINATOR_OK;
 }
+
+#ifndef NO_VOICE
+AkinatorError AkinatorPrintf(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    vprintf(format, args);
+
+    char command_arg[MAX_PRINT_COMMAND_SIZE + 1];
+    vsnprintf(command_arg, MAX_PRINT_COMMAND_SIZE, format, args);
+
+    char command[2 * MAX_PRINT_COMMAND_SIZE + 1];
+    snprintf(command, 2 * MAX_PRINT_COMMAND_SIZE, "espeak-ng -v ru \"%s\"", command_arg);
+
+    system(command);
+
+    va_end(args);
+
+    return AKINATOR_OK;
+}
+#else
+AkinatorError AkinatorPrintf(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    vprintf(format, args);
+
+    va_end(args);
+
+    return AKINATOR_OK;
+}
+#endif
