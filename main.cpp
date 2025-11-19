@@ -2,6 +2,6 @@
 
 #include <stdio.h>
 
-int main(int argc, const char** argv) { // FIXME сделать флаги, чтоб передаватть файл с базой данных и сделать частью интерфейса возможность загрузить и сохранить
+int main(int argc, const char** argv) {
     return (int)AkinatorApp(argc, argv);
 }
